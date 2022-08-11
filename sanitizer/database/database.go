@@ -42,31 +42,19 @@ func CreateTables(database *sql.DB) {
 	stationTable := `CREATE TABLE stations (
 		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 		"Reference" TEXT,
-		"Name" TEXT
+		"Name" TEXT,
+		"LineName" TEXT
 		);`
 	_, err = database.Exec(stationTable)
 	checkErr(err)
-
-	/////// LINES
-	drop = `DROP TABLE IF EXISTS lines;`
-	_, err = database.Exec(drop)
-	checkErr(err)
-	helper.GInfoLn("Creating table lines...")
-	lineTable := `CREATE TABLE lines (
-		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-		"Reference" TEXT,
-		"Name" TEXT
-		);`
-	_, err = database.Exec(lineTable)
-	checkErr(err)
 }
 
-func AddStation(db *sql.DB, ref string, name string) {
-	record := `INSERT INTO stations(Reference, Name) VALUES (?, ?)`
+func AddStation(db *sql.DB, ref string, name string, lineName string) {
+	record := `INSERT INTO stations(Reference, Name, LineName) VALUES (?, ?, ?)`
 	query, err := db.Prepare(record)
 	checkErr(err)
 
-	_, err = query.Exec(ref, name)
+	_, err = query.Exec(ref, name, lineName)
 	checkErr(err)
 }
 

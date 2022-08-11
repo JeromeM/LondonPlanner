@@ -13,38 +13,38 @@ app = FastAPI()
 
     Return only a dict with ping/pong
 """
-@app.get("/")
+@app.get('/')
 def index() -> dict:
-    return {"ping": "pong"}
+    return {'ping': 'pong'}
 
 """
     Search for a station
 """
-@app.get("/station")
+@app.get('/station')
 def search_station(q: Union[str, None] = None, limit: int = 10) -> dict:
     r = _search_station(q, limit)
-    return {"query": q, "limit": limit, "result_count": len(r),"result": r}
+    return {'query': q, 'limit': limit, 'result_count': len(r), 'result': r}
 
 """
     Search for all stations on the same line as the one provided
 """
-@app.get("/station/{station_id}")
+@app.get('/station/{station_id}')
 def info_stations(station_id: str) -> dict:
-    return {"station_id": station_id}
+    return {'station_id': station_id}
 
 """
     Search for the shortest way to go from Station 1 to Station 2
 """
-@app.get("/shortest/{from_station}/{to_station}")
+@app.get('/shortest/{from_station}/{to_station}')
 def shortest_way(from_station: str, to_station: str) -> dict:
-    return {"from": from_station, "to": to_station}
+    return {'from': from_station, 'to': to_station}
 
 """
     Search for the fastest way to go from Station 1 to Station 2
 """
-@app.get("/fastest/{from_station}/{to_station}")
+@app.get('/fastest/{from_station}/{to_station}')
 def fastest_way(from_station: str, to_station: str) -> dict:
-    return {"from": from_station, "to": to_station}
+    return {'from': from_station, 'to': to_station}
 
 ##########################################################
 
@@ -68,7 +68,7 @@ def _search_station(q, limit = 10):
 
     conn = create_connection()
     cur = conn.cursor()
-    cur.execute(f"SELECT Name, Reference FROM stations WHERE Name LIKE '%{q}%' LIMIT ?", (limit,))
+    cur.execute(f'SELECT Name, Reference FROM stations WHERE Name LIKE \'%{q}%\' LIMIT ?', (limit,))
 
     rows = cur.fetchall()
 

@@ -93,8 +93,9 @@ func (xmlFile *XMLFile) undergroundTrain() {
 		byteValue, _ := ioutil.ReadAll(xmlFile)
 		xml.Unmarshal(byteValue, &trans)
 
+		lineName := trans.Services.Service[0].Line_name
 		for i := 0; i < len(trans.StopPoints.StopPoint); i++ {
-			database.AddStation(db, trans.StopPoints.StopPoint[i].Ref, trans.StopPoints.StopPoint[i].Name)
+			database.AddStation(db, trans.StopPoints.StopPoint[i].Ref, trans.StopPoints.StopPoint[i].Name, lineName)
 		}
 
 		defer xmlFile.Close()
