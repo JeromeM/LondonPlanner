@@ -68,7 +68,7 @@ func main() {
 	}
 	for _, f := range xmlFiles {
 		if err := os.Remove(f); err != nil {
-			helper.GFatalLn("Can't remove file " + f + " : " + err.Error())
+			helper.GFatalLn("Can't remove file %s : %s", f, err.Error())
 		}
 	}
 

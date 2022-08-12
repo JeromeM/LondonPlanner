@@ -9,7 +9,7 @@ import (
 
 const logFormat string = "2006-01-02 15:04:05"
 
-var colors = map[string]int16{
+var colors = map[string]int8{
 	"info":    32,
 	"warning": 33,
 	"fatal":   31,
