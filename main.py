@@ -4,6 +4,7 @@ import sqlite3
 
 from sqlite3 import Error
 from typing import Union
+from venv import create
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -22,15 +23,16 @@ def index() -> dict:
 """
 @app.get('/station')
 def search_station(q: Union[str, None] = None, limit: int = 10) -> dict:
-    r = _search_station(q, limit)
-    return {'query': q, 'limit': limit, 'result_count': len(r), 'result': r}
+    result = _search_station(q, limit)
+    return {'query': q, 'limit': limit, 'result_count': len(r), 'result': result}
 
 """
     Search for all stations on the same line as the one provided
 """
 @app.get('/station/{station_id}')
 def info_stations(station_id: str) -> dict:
-    return {'station_id': station_id}
+    line, result = _search_line(station_id)
+    return {'station_id': station_id, 'line': line, 'result': result}
 
 """
     Search for the shortest way to go from Station 1 to Station 2
@@ -78,3 +80,33 @@ def _search_station(q, limit = 10):
             'Ref': row[1]
         })
     return result
+
+'''
+    NOT WORKING AS INTENDED .... TOO MUCH STATIONS
+    AND THE ORDER IS WRONG
+'''
+def _search_line(station_id):
+    result = []
+
+    conn = create_connection()
+    cur = conn.cursor()
+    
+    cur.execute("SELECT LineName FROM stations WHERE Reference = ?", (station_id,))
+    rows = cur.fetchall()
+    for row in rows:
+        line = row
+
+    line_name = line[0]
+
+    cur.execute("SELECT Name, Reference FROM stations WHERE LineName = ? GROUP BY Name ORDER BY id", (line_name,))
+    rows = cur.fetchall()
+    i = 0
+    for row in rows:
+        result.append({
+            'Order': i,
+            'Name': row[0],
+            'Ref': row[1]
+        })
+        i += 1
+
+    return line_name, result
